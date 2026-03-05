@@ -1,7 +1,5 @@
+import { GameScreen } from "./components/GameScreen"
+
 export function App() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Hello, Scrabble</h1>
-    </div>
-  )
+  return <GameScreen />
 }

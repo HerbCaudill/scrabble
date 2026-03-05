@@ -66,39 +66,6 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
     return () => clearTimeout(timer)
   }, [gameState.currentPlayerIndex, isGameOver, isHumanTurn])
 
-  /** Place a tile from the rack onto a board square. */
-  const handleSquareClick = useCallback(
-    (position: Position) => {
-      if (!isHumanTurn || swapMode || isGameOver) return
-      // Can't place on occupied squares
-      if (gameState.board[position.row][position.col] !== null) return
-      // Can't place if already placed a tile here
-      if (placedTiles.some(t => t.row === position.row && t.col === position.col)) return
-      // Find next unplaced tile from rack
-      const placedIndices = new Set(placedTiles.map(t => t.rackIndex))
-      const nextRackIndex = rackOrder.find(
-        i => i < currentPlayer.rack.length && !placedIndices.has(i),
-      )
-      if (nextRackIndex === undefined) return
-
-      const tile = currentPlayer.rack[nextRackIndex]
-      setPlacedTiles(prev => [
-        ...prev,
-        { ...position, tile: tile.letter, rackIndex: nextRackIndex },
-      ])
-      setError(null)
-    },
-    [
-      isHumanTurn,
-      swapMode,
-      isGameOver,
-      gameState.board,
-      placedTiles,
-      rackOrder,
-      currentPlayer.rack,
-    ],
-  )
-
   /** Commit the placed tiles as a move. */
   const handlePlay = useCallback(() => {
     if (placedTiles.length === 0) {
@@ -217,11 +184,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
         {isGameOver && <p className="text-center text-lg font-bold text-neutral-900">Game over!</p>}
 
         {/* Board */}
-        <Board
-          board={effectiveBoard}
-          onSquareClick={handleSquareClick}
-          highlightedSquares={highlightedSquares}
-        />
+        <Board board={effectiveBoard} highlightedSquares={highlightedSquares} />
 
         {/* Rack */}
         {isHumanTurn && !isGameOver && (

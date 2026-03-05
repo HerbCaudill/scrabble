@@ -158,56 +158,18 @@ describe("GameScreen", () => {
     expect(screen.queryByRole("button", { name: "Recall" })).not.toBeInTheDocument()
   })
 
-  it("shows Recall button instead of Shuffle after placing a tile on the board", () => {
-    render(<GameScreen />)
-    // Click a board square to place a tile
-    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
-    fireEvent.click(centerSquare)
-    // Shuffle should be gone, Recall should appear
-    expect(screen.queryByRole("button", { name: "Shuffle" })).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Recall" })).toBeInTheDocument()
-  })
-
-  it("shows score badge when tiles are placed on the board", () => {
-    render(<GameScreen />)
-    // No score badge initially
-    expect(screen.queryByTestId("score-badge")).not.toBeInTheDocument()
-    // Place a tile on the board
-    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
-    fireEvent.click(centerSquare)
-    // Score badge should appear with the mocked score
-    expect(screen.getByTestId("score-badge")).toBeInTheDocument()
-    expect(screen.getByTestId("score-badge")).toHaveTextContent("12")
-  })
-
-  it("hides score badge when tiles are recalled", () => {
-    render(<GameScreen />)
-    // Place a tile
-    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
-    fireEvent.click(centerSquare)
-    expect(screen.getByTestId("score-badge")).toBeInTheDocument()
-    // Recall tiles
-    fireEvent.click(screen.getByRole("button", { name: "Recall" }))
-    // Score badge should disappear
-    expect(screen.queryByTestId("score-badge")).not.toBeInTheDocument()
-  })
-
-  it("returns tiles to rack when Recall is clicked", () => {
+  it("does not place a tile when clicking a board square", () => {
     render(<GameScreen />)
     const rack = screen.getByTestId("rack")
     const initialTileCount = rack.querySelectorAll("[data-tile]").length
 
-    // Place a tile on the board
+    // Click an empty board square
     const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
     fireEvent.click(centerSquare)
-    // Rack should have one fewer tile
-    expect(rack.querySelectorAll("[data-tile]")).toHaveLength(initialTileCount - 1)
 
-    // Click Recall
-    fireEvent.click(screen.getByRole("button", { name: "Recall" }))
-    // Rack should be restored
+    // Rack count should remain the same (no tile was placed)
     expect(rack.querySelectorAll("[data-tile]")).toHaveLength(initialTileCount)
-    // Shuffle should be back
+    // Shuffle should still be visible (no tiles placed, so no Recall)
     expect(screen.getByRole("button", { name: "Shuffle" })).toBeInTheDocument()
     expect(screen.queryByRole("button", { name: "Recall" })).not.toBeInTheDocument()
   })

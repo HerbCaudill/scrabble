@@ -37,14 +37,15 @@ test.describe("Game screen", () => {
     await expect(page.getByRole("button", { name: "Shuffle" })).toBeVisible()
   })
 
-  test("can place a tile on the board by clicking a square", async ({ page }) => {
-    // Click an empty square — should place the first rack tile
+  test("clicking a square does not place a tile", async ({ page }) => {
+    const rack = page.locator("[data-rack]")
+    const tileCountBefore = await rack.locator("[data-tile]").count()
+
+    // Click an empty square
     await page.locator('[data-cell="7-7"]').click()
 
-    // The square should now contain a tile letter
-    const center = page.locator('[data-cell="7-7"]')
-    const text = await center.textContent()
-    expect(text?.length).toBeGreaterThan(0)
+    // Rack should still have the same number of tiles (no tile was placed)
+    await expect(rack.locator("[data-tile]")).toHaveCount(tileCountBefore)
   })
 
   test("shows error when playing without placing tiles", async ({ page }) => {

@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react"
-import userEvent from "@testing-library/user-event"
-import { describe, expect, it, vi } from "vitest"
+import { describe, expect, it } from "vitest"
 import { Board } from "../Board"
 import { createEmptyBoard } from "@/board/createEmptyBoard"
 
@@ -56,13 +55,12 @@ describe("Board", () => {
     expect(square?.textContent).not.toContain("3W")
   })
 
-  it("calls onSquareClick when a square is clicked", async () => {
+  it("does not respond to clicks on squares", async () => {
     const board = createEmptyBoard()
-    const handleClick = vi.fn()
-    const { container } = render(<Board board={board} onSquareClick={handleClick} />)
+    const { container } = render(<Board board={board} />)
     const square = container.querySelector('[data-cell="3-5"]') as HTMLElement
-    await userEvent.click(square)
-    expect(handleClick).toHaveBeenCalledWith({ row: 3, col: 5 })
+    // Squares should not have cursor-pointer since there's no click handler
+    expect(square.className).not.toMatch(/cursor-pointer/)
   })
 
   it("highlights specified squares", () => {

@@ -6,7 +6,6 @@ import type { Tile } from "@/types"
 /** 15x15 Scrabble board grid showing multiplier squares and placed tiles. */
 export const Board = ({
   board,
-  onSquareClick,
   highlightedSquares,
   squareHighlights,
   pendingTiles,
@@ -42,9 +41,6 @@ export const Board = ({
               highlightType={squareHighlights?.get(key)}
               pending={isPending}
               dragOver={isDragOver}
-              onClick={
-                onSquareClick ? () => onSquareClick({ row: rowIndex, col: colIndex }) : undefined
-              }
               onDragOver={
                 onDragOver ? e => onDragOver(e, { row: rowIndex, col: colIndex }) : undefined
               }
@@ -61,8 +57,6 @@ export const Board = ({
 type Props = {
   /** The current board state (15x15 grid of letters or nulls). */
   board: BoardState
-  /** Handler called when a square is clicked. */
-  onSquareClick?: (position: Position) => void
   /** Squares to visually highlight (e.g. for showing the last move). */
   highlightedSquares?: Position[]
   /** Map of "row-col" -> HighlightType for typed analysis highlights. */

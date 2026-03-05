@@ -5,7 +5,18 @@ import { IconStar } from "@tabler/icons-react"
 import type { SquareType } from "@/board/types"
 
 /** A single square on the Scrabble board, showing either a premium label or a placed tile. */
-export const Square = ({ row, col, tile, highlighted = false, onClick }: Props) => {
+export const Square = ({
+  row,
+  col,
+  tile,
+  highlighted = false,
+  pending = false,
+  dragOver = false,
+  onClick,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+}: Props) => {
   const squareType = getSquareType(row, col)
   const hasTile = tile !== null
 
@@ -14,6 +25,9 @@ export const Square = ({ row, col, tile, highlighted = false, onClick }: Props) 
       data-cell={`${row}-${col}`}
       data-testid={`cell-${row}-${col}`}
       onClick={onClick}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
       className={cn(
         "relative flex items-center justify-center",
         "aspect-square text-center",
@@ -30,10 +44,16 @@ export const Square = ({ row, col, tile, highlighted = false, onClick }: Props) 
         !hasTile && squareType === null && "bg-amber-50",
 
         // When tile is placed
-        hasTile && "border-amber-300/60 bg-gradient-to-b from-amber-100 to-amber-200",
+        hasTile && !pending && "border-amber-300/60 bg-gradient-to-b from-amber-100 to-amber-200",
+
+        // Pending tile (placed but not yet committed)
+        pending && "border-blue-400/60 bg-gradient-to-b from-blue-50 to-blue-100",
 
         // Highlight
         highlighted && "ring-2 ring-yellow-400 ring-inset",
+
+        // Drag-over visual feedback
+        dragOver && "bg-green-100/50 ring-2 ring-green-400 ring-inset",
       )}
     >
       {hasTile ?
@@ -78,6 +98,16 @@ type Props = {
   tile: string | null
   /** Whether this square should be visually highlighted. */
   highlighted?: boolean
+  /** Whether this tile is a pending placement (not yet committed). */
+  pending?: boolean
+  /** Whether a dragged tile is currently hovering over this square. */
+  dragOver?: boolean
   /** Click handler for this square. */
   onClick?: () => void
+  /** Drag over handler for drop target behavior. */
+  onDragOver?: React.DragEventHandler<HTMLDivElement>
+  /** Drag leave handler for drop target behavior. */
+  onDragLeave?: React.DragEventHandler<HTMLDivElement>
+  /** Drop handler for accepting a dragged tile. */
+  onDrop?: React.DragEventHandler<HTMLDivElement>
 }

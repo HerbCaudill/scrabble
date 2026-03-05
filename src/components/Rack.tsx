@@ -10,6 +10,13 @@ export const Rack = ({
   onDragStart,
   onDragEnd,
 }: Props) => {
+  /** Wrap onDragStart to set the tile index in dataTransfer. */
+  const handleDragStart = (index: number, e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer?.setData("text/plain", String(index))
+    if (e.dataTransfer) e.dataTransfer.effectAllowed = "move"
+    onDragStart?.(e)
+  }
+
   return (
     <div data-rack data-testid="rack" className="flex gap-1">
       {tiles.map((tile, index) => (
@@ -19,7 +26,7 @@ export const Rack = ({
             mode={exchangeMode ? "static" : "draggable"}
             size="md"
             selected={selectedIndices.includes(index)}
-            onDragStart={onDragStart}
+            onDragStart={e => handleDragStart(index, e)}
             onDragEnd={onDragEnd}
           />
         </div>

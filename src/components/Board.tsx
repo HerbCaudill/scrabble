@@ -1,9 +1,19 @@
 import { cn } from "@/lib/utils"
 import { Square } from "./Square"
 import type { BoardState, Position } from "@/board/types"
+import type { Tile } from "@/types"
 
 /** 15x15 Scrabble board grid showing multiplier squares and placed tiles. */
-export const Board = ({ board, onSquareClick, highlightedSquares }: Props) => {
+export const Board = ({
+  board,
+  onSquareClick,
+  highlightedSquares,
+  pendingTiles,
+  dragOverSquare,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+}: Props) => {
   /** Set of "row-col" keys for O(1) highlight lookup. */
   const highlightSet = new Set(highlightedSquares?.map(({ row, col }) => `${row}-${col}`))
 
@@ -16,18 +26,30 @@ export const Board = ({ board, onSquareClick, highlightedSquares }: Props) => {
       )}
     >
       {board.map((row, rowIndex) =>
-        row.map((tile, colIndex) => (
-          <Square
-            key={`${rowIndex}-${colIndex}`}
-            row={rowIndex}
-            col={colIndex}
-            tile={tile}
-            highlighted={highlightSet.has(`${rowIndex}-${colIndex}`)}
-            onClick={
-              onSquareClick ? () => onSquareClick({ row: rowIndex, col: colIndex }) : undefined
-            }
-          />
-        )),
+        row.map((tile, colIndex) => {
+          const key = `${rowIndex}-${colIndex}`
+          const isPending = pendingTiles?.has(key) ?? false
+          const isDragOver = dragOverSquare === key
+          return (
+            <Square
+              key={key}
+              row={rowIndex}
+              col={colIndex}
+              tile={tile}
+              highlighted={highlightSet.has(key)}
+              pending={isPending}
+              dragOver={isDragOver}
+              onClick={
+                onSquareClick ? () => onSquareClick({ row: rowIndex, col: colIndex }) : undefined
+              }
+              onDragOver={
+                onDragOver ? e => onDragOver(e, { row: rowIndex, col: colIndex }) : undefined
+              }
+              onDragLeave={onDragLeave}
+              onDrop={onDrop ? e => onDrop(e, { row: rowIndex, col: colIndex }) : undefined}
+            />
+          )
+        }),
       )}
     </div>
   )
@@ -40,4 +62,14 @@ type Props = {
   onSquareClick?: (position: Position) => void
   /** Squares to visually highlight (e.g. for showing the last move). */
   highlightedSquares?: Position[]
+  /** Map of "row-col" -> Tile for pending placements (shown with different styling). */
+  pendingTiles?: Map<string, Tile>
+  /** Key of the square currently being dragged over ("row-col" or null). */
+  dragOverSquare?: string | null
+  /** Drag over handler for squares, receives the position. */
+  onDragOver?: (e: React.DragEvent<HTMLDivElement>, position: Position) => void
+  /** Drag leave handler for squares. */
+  onDragLeave?: React.DragEventHandler<HTMLDivElement>
+  /** Drop handler for squares, receives the position. */
+  onDrop?: (e: React.DragEvent<HTMLDivElement>, position: Position) => void
 }

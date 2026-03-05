@@ -21,9 +21,9 @@ export const Board = ({
   return (
     <div
       className={cn(
-        "grid aspect-square w-full max-w-[min(100vw,100vh)]",
+        "@container grid aspect-square w-full max-w-[min(100vw,100vh)]",
         "grid-cols-[repeat(15,1fr)] grid-rows-[repeat(15,1fr)]",
-        "overflow-hidden rounded-md border-2 border-amber-900/40 bg-amber-900/30",
+        "gap-[0.25cqw] overflow-hidden rounded-md bg-neutral-300 p-[0.25cqw]",
       )}
     >
       {board.map((row, rowIndex) =>

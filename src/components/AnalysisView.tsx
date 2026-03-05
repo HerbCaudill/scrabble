@@ -17,12 +17,6 @@ export const AnalysisView = ({ gameState }: Props) => {
   const totalTurns = analysis.turns.length
   const turn = analysis.turns[currentTurnIndex]
 
-  /** Reconstruct board state up to (but not including) the current turn to show what was on the board before. */
-  const boardBeforeMove = useMemo(
-    () => reconstructBoardAtTurn(gameState.moveHistory, currentTurnIndex - 1),
-    [gameState.moveHistory, currentTurnIndex],
-  )
-
   /** Board state after the current turn's move. */
   const boardAfterMove = useMemo(
     () => reconstructBoardAtTurn(gameState.moveHistory, currentTurnIndex),

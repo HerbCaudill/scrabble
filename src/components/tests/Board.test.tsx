@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event"
 import { describe, expect, it, vi } from "vitest"
 import { Board } from "../Board"
 import { createEmptyBoard } from "@/board/createEmptyBoard"
-import type { BoardState } from "@/board/types"
 
 describe("Board", () => {
   it("renders a 15x15 grid of squares", () => {
@@ -21,25 +20,22 @@ describe("Board", () => {
     expect(container.querySelector('[data-cell="14-14"]')).toBeInTheDocument()
   })
 
-  it("shows premium labels on empty squares", () => {
+  it("shows dots on premium squares", () => {
     const board = createEmptyBoard()
-    render(<Board board={board} />)
-    // TW squares should show "3W"
-    expect(screen.getAllByText("3W").length).toBeGreaterThan(0)
-    // DW squares should show "2W"
-    expect(screen.getAllByText("2W").length).toBeGreaterThan(0)
-    // TL squares should show "3L"
-    expect(screen.getAllByText("3L").length).toBeGreaterThan(0)
-    // DL squares should show "2L"
-    expect(screen.getAllByText("2L").length).toBeGreaterThan(0)
+    const { container } = render(<Board board={board} />)
+    // TW square (0,0) should have 3 dots (children divs in the dots container)
+    const twSquare = container.querySelector('[data-cell="0-0"]')
+    const dots = twSquare?.querySelectorAll(".rounded-full")
+    expect(dots?.length).toBe(3)
   })
 
-  it("shows a star icon on the center square", () => {
+  it("shows a bulls-eye on the center square", () => {
     const board = createEmptyBoard()
     const { container } = render(<Board board={board} />)
     const centerSquare = container.querySelector('[data-cell="7-7"]')
-    // The center square should contain an SVG icon (IconStar)
-    expect(centerSquare?.querySelector("svg")).toBeInTheDocument()
+    // The center square should contain the bulls-eye (nested rounded-full divs)
+    const circles = centerSquare?.querySelectorAll(".rounded-full")
+    expect(circles?.length).toBeGreaterThan(0)
   })
 
   it("shows tile letter when a tile is placed", () => {

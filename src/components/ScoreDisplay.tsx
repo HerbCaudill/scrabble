@@ -14,8 +14,8 @@ export const ScoreDisplay = ({ players, currentPlayerIndex, tilesInBag, lastMove
             className={cn(
               "flex items-center justify-between rounded-md px-3 py-2",
               i === currentPlayerIndex ?
-                "bg-amber-700/50 font-bold text-amber-100"
-              : "text-amber-300",
+                "bg-neutral-100 font-bold text-neutral-900"
+              : "text-neutral-500",
             )}
           >
             <span data-player={player.name}>{player.name}</span>
@@ -25,10 +25,10 @@ export const ScoreDisplay = ({ players, currentPlayerIndex, tilesInBag, lastMove
       </div>
 
       {/* Tiles remaining */}
-      <p className="text-sm text-amber-400">{tilesInBag} tiles remaining</p>
+      <p className="text-sm text-neutral-400">{tilesInBag} tiles remaining</p>
 
       {/* Last move info */}
-      {lastMove && <p className="text-sm text-amber-300">{formatLastMove(lastMove)}</p>}
+      {lastMove && <p className="text-sm text-neutral-500">{formatLastMove(lastMove)}</p>}
     </div>
   )
 }

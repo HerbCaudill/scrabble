@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest"
 import { createEmptyBoard } from "../../board/createEmptyBoard"
-import type { BoardState } from "../../board/types"
 import { findAnchors } from "../findAnchors"
 
 describe("findAnchors", () => {

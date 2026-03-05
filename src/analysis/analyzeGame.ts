@@ -2,7 +2,6 @@ import { createEmptyBoard } from "../board/createEmptyBoard"
 import type { BoardState, Move } from "../board/types"
 import type { GameState, MoveRecord } from "../game/types"
 import type { ScoredMove } from "../movegen/types"
-import type { Tile } from "../types"
 import { analyzeTurn } from "./analyzeTurn"
 import type { GameAnalysis, PlayerSummary, TurnAnalysis } from "./types"
 

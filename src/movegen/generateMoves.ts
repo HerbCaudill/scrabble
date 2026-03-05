@@ -125,7 +125,7 @@ const generateMovesFromAnchor = (
 ): void => {
   const existingPrefix = getExistingPrefix(board, anchorRow, anchorCol, horizontal)
 
-  if (existingPrefix.length > 0) {
+  if (existingPrefix.word.length > 0) {
     extendRight(
       board,
       rack,

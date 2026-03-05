@@ -50,9 +50,11 @@ describe("Move highlighting on board", () => {
     const { container } = render(<Board board={board} squareHighlights={highlights} />)
     const actualSquare = container.querySelector('[data-cell="7-7"]')
     const bestSquare = container.querySelector('[data-cell="7-8"]')
-    // Actual should have emerald/green ring, best should have indigo/blue ring
-    expect(actualSquare?.className).toMatch(/emerald/)
-    expect(bestSquare?.className).toMatch(/indigo/)
+    // Both should have ring styling but they should be distinguishable via data-highlight
+    expect(actualSquare?.className).toMatch(/ring/)
+    expect(bestSquare?.className).toMatch(/ring/)
+    expect(actualSquare?.getAttribute("data-highlight")).toBe("actual")
+    expect(bestSquare?.getAttribute("data-highlight")).toBe("best")
   })
 
   it("supports both old highlightedSquares and new squareHighlights props", () => {

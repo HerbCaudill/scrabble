@@ -30,9 +30,9 @@ export const Tile = ({
       className={cn(
         // Base tile styles: warm tan background, raised 3D look
         "relative inline-flex items-end justify-center rounded-sm font-bold select-none",
-        "bg-gradient-to-b from-amber-100 to-amber-200",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.6),inset_0_-1px_0_rgba(0,0,0,0.1),0_2px_3px_rgba(0,0,0,0.2)]",
-        "border border-amber-300/60",
+        "bg-neutral-50",
+        "shadow-sm",
+        "border border-neutral-300",
         "font-[var(--font-ibm-plex-sans,_'IBM_Plex_Sans',_sans-serif)]",
 
         // Size variants
@@ -41,14 +41,14 @@ export const Tile = ({
         size === "lg" && "h-14 w-14 pb-1.5 text-2xl leading-none",
 
         // Selected state
-        selected && "ring-2 ring-blue-500 ring-offset-1",
+        selected && "ring-2 ring-neutral-500 ring-offset-1",
 
         // Draggable cursor
         mode === "draggable" && "cursor-grab active:cursor-grabbing",
       )}
     >
       {/* Letter */}
-      <span data-letter className={cn("text-amber-950", assignedBlank && "opacity-40")}>
+      <span data-letter className={cn("text-neutral-900", assignedBlank && "opacity-40")}>
         {displayLetter}
       </span>
 
@@ -57,7 +57,7 @@ export const Tile = ({
         <span
           data-value
           className={cn(
-            "absolute font-semibold text-amber-900/80",
+            "absolute font-semibold text-neutral-500",
             size === "sm" && "right-0.5 bottom-px text-[7px] leading-none",
             size === "md" && "right-1 bottom-0.5 text-[9px] leading-none",
             size === "lg" && "right-1.5 bottom-1 text-[11px] leading-none",

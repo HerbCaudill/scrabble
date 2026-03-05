@@ -1,17 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { createGame } from "../createGame"
 import { exchangePlayerTiles } from "../exchangePlayerTiles"
-import type { GameState } from "../types"
-import type { Tile } from "../../types"
-
-/** Helper to set a specific rack for the current player. */
-const withRack = (state: GameState, tiles: Tile[]): GameState => ({
-  ...state,
-  players: state.players.map((p, i) =>
-    i === state.currentPlayerIndex ? { ...p, rack: tiles } : p,
-  ),
-})
-
 describe("exchangePlayerTiles", () => {
   it("replaces selected tiles with new ones from the bag", () => {
     const state = createGame(["Alice", "Bob"])

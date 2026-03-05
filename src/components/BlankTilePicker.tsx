@@ -30,8 +30,8 @@ export const BlankTilePicker = ({ open, onSelect, onClose }: Props) => {
               onClick={() => onSelect(letter.toLowerCase())}
               className={cn(
                 "flex h-9 w-9 items-center justify-center rounded",
-                "bg-amber-100 font-bold text-amber-950",
-                "hover:bg-amber-200 active:bg-amber-300",
+                "bg-neutral-100 font-bold text-neutral-900",
+                "hover:bg-neutral-200 active:bg-neutral-300",
                 "transition-colors",
               )}
             >

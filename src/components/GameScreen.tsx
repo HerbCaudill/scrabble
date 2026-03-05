@@ -184,7 +184,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
   })
 
   return (
-    <div className="flex h-screen gap-6 bg-amber-950 p-6">
+    <div className="flex h-screen gap-6 bg-white p-6">
       {/* Board */}
       <div className="flex flex-1 items-center justify-center">
         <Board
@@ -197,7 +197,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
       {/* Sidebar */}
       <div className="flex w-72 flex-col gap-6">
         {/* Scoreboard */}
-        <div className="rounded-lg bg-amber-900/50 p-4">
+        <div className="rounded-lg bg-neutral-50 p-4">
           <ScoreDisplay
             players={gameState.players}
             currentPlayerIndex={isGameOver ? -1 : gameState.currentPlayerIndex}
@@ -208,14 +208,14 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
 
         {/* Turn indicator */}
         {!isGameOver && (
-          <p className="text-center text-sm text-amber-300">
+          <p className="text-center text-sm text-neutral-500">
             {isHumanTurn ?
               `${currentPlayer.name === "You" ? "Your" : `${currentPlayer.name}'s`} turn`
             : `${currentPlayer.name}'s turn...`}
           </p>
         )}
 
-        {isGameOver && <p className="text-center text-lg font-bold text-amber-100">Game over!</p>}
+        {isGameOver && <p className="text-center text-lg font-bold text-neutral-900">Game over!</p>}
 
         {/* Rack */}
         {isHumanTurn && !isGameOver && (
@@ -231,7 +231,10 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
 
         {/* Error display */}
         {error && (
-          <div role="alert" className="rounded-md bg-red-900/60 px-3 py-2 text-sm text-red-200">
+          <div
+            role="alert"
+            className="rounded-md bg-neutral-100 px-3 py-2 text-sm text-neutral-700"
+          >
             {error}
           </div>
         )}
@@ -243,19 +246,13 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
               <>
                 <button
                   onClick={handleConfirmExchange}
-                  className={cn(
-                    "rounded-md px-4 py-2 font-medium",
-                    "bg-amber-600 text-white hover:bg-amber-500",
-                  )}
+                  className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
                 >
                   Confirm exchange
                 </button>
                 <button
                   onClick={handleCancelExchange}
-                  className={cn(
-                    "rounded-md px-4 py-2 font-medium",
-                    "bg-amber-800 text-amber-200 hover:bg-amber-700",
-                  )}
+                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
                   Cancel
                 </button>
@@ -263,37 +260,25 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
             : <>
                 <button
                   onClick={handlePlay}
-                  className={cn(
-                    "rounded-md px-4 py-2 font-medium",
-                    "bg-green-700 text-white hover:bg-green-600",
-                  )}
+                  className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
                 >
                   Play
                 </button>
                 <button
                   onClick={handleExchange}
-                  className={cn(
-                    "rounded-md px-4 py-2 font-medium",
-                    "bg-amber-600 text-white hover:bg-amber-500",
-                  )}
+                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
                   Exchange
                 </button>
                 <button
                   onClick={handlePass}
-                  className={cn(
-                    "rounded-md px-4 py-2 font-medium",
-                    "bg-amber-800 text-amber-200 hover:bg-amber-700",
-                  )}
+                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
                   Pass
                 </button>
                 <button
                   onClick={handleShuffle}
-                  className={cn(
-                    "rounded-md px-4 py-2 font-medium",
-                    "bg-amber-800 text-amber-200 hover:bg-amber-700",
-                  )}
+                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
                   Shuffle
                 </button>

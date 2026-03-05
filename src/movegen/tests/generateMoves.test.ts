@@ -11,13 +11,6 @@ const placeWord = (board: BoardState, word: string, row: number, col: number) =>
   }
 }
 
-/** Place a word on the board vertically starting at (row, col). */
-const placeWordVertical = (board: BoardState, word: string, row: number, col: number) => {
-  for (let i = 0; i < word.length; i++) {
-    board[row + i][col] = word[i]
-  }
-}
-
 describe("generateMoves", () => {
   it("should return moves sorted by score descending", () => {
     const board = createEmptyBoard()

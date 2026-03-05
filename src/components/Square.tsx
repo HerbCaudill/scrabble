@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils"
 import { getSquareType } from "@/board/getSquareType"
 import { tileValues } from "@/board/tileValues"
-import { IconStar } from "@tabler/icons-react"
+import { BOARD_SIZE } from "@/board/constants"
 import type { SquareType, HighlightType } from "@/board/types"
 
-/** A single square on the Scrabble board, showing either a premium label or a placed tile. */
+/** A single square on the Scrabble board, showing either dots for multipliers or a placed tile. */
 export const Square = ({
   row,
   col,
@@ -20,6 +20,7 @@ export const Square = ({
 }: Props) => {
   const squareType = getSquareType(row, col)
   const hasTile = tile !== null
+  const isWordMultiplier = squareType === "DW" || squareType === "TW" || squareType === "ST"
 
   return (
     <div
@@ -32,43 +33,41 @@ export const Square = ({
       onDrop={onDrop}
       className={cn(
         "relative flex items-center justify-center",
-        "aspect-square text-center",
-        "border border-amber-900/20",
-        "text-[0.5em] leading-none font-bold uppercase",
+        "aspect-square overflow-visible text-center",
         onClick && "cursor-pointer",
 
-        // Square type colors (when no tile is placed)
-        !hasTile && squareType === "TW" && "bg-red-700 text-white",
-        !hasTile && squareType === "DW" && "bg-rose-400 text-white",
-        !hasTile && squareType === "TL" && "bg-blue-700 text-white",
-        !hasTile && squareType === "DL" && "bg-sky-300 text-sky-900",
-        !hasTile && squareType === "ST" && "bg-rose-400 text-white",
-        !hasTile && squareType === null && "bg-amber-50",
+        // Background: word multipliers are darker, letter/normal are lighter
+        !hasTile && isWordMultiplier && "bg-neutral-300",
+        !hasTile && !isWordMultiplier && "bg-neutral-200",
 
         // When tile is placed
-        hasTile && !pending && "border-amber-300/60 bg-gradient-to-b from-amber-100 to-amber-200",
+        hasTile && !pending && "bg-neutral-50",
 
         // Pending tile (placed but not yet committed)
-        pending && "border-blue-400/60 bg-gradient-to-b from-blue-50 to-blue-100",
+        pending && "border border-neutral-400 bg-neutral-100",
 
         // Typed highlights (analysis view)
-        highlightType === "actual" && "ring-2 ring-emerald-500 ring-inset",
-        highlightType === "best" && "ring-2 ring-indigo-500 ring-inset",
-        highlightType === "both" && "ring-2 ring-emerald-500 ring-inset",
+        highlightType === "actual" && "ring-2 ring-neutral-500 ring-inset",
+        highlightType === "best" && "ring-2 ring-neutral-400 ring-inset",
+        highlightType === "both" && "ring-2 ring-neutral-500 ring-inset",
 
-        // Legacy highlight (backwards compat)
-        !highlightType && highlighted && "ring-2 ring-yellow-400 ring-inset",
+        // Legacy highlight
+        !highlightType && highlighted && "ring-2 ring-neutral-400 ring-inset",
 
         // Drag-over visual feedback
-        dragOver && "bg-green-100/50 ring-2 ring-green-400 ring-inset",
+        dragOver && "bg-neutral-200 ring-2 ring-neutral-400 ring-inset",
       )}
     >
       {hasTile ?
         <TileDisplay letter={tile} />
       : squareType === "ST" ?
-        <IconStar size="60%" />
+        <BullsEye />
       : squareType !== null ?
-        <span>{PREMIUM_LABELS[squareType]}</span>
+        <Dots
+          count={squareType === "DL" || squareType === "DW" ? 2 : 3}
+          light={!isWordMultiplier}
+          rotation={getRotation(row, col)}
+        />
       : null}
     </div>
   )
@@ -79,21 +78,55 @@ const TileDisplay = ({ letter }: { letter: string }) => {
   const value = tileValues[letter.toUpperCase()] ?? 0
   return (
     <>
-      <span className="text-[1.2em] leading-none font-bold text-amber-950">{letter}</span>
-      <span className="absolute right-[8%] bottom-[2%] text-[0.45em] font-semibold text-amber-900/80">
+      <span className="text-[1.2em] leading-none font-bold text-neutral-900">{letter}</span>
+      <span className="absolute right-[8%] bottom-[2%] text-[0.45em] font-semibold text-neutral-500">
         {value}
       </span>
     </>
   )
 }
 
-/** Map from SquareType to the premium label text shown on the board. */
-const PREMIUM_LABELS: Record<NonNullable<SquareType>, string> = {
-  TW: "3W",
-  DW: "2W",
-  TL: "3L",
-  DL: "2L",
-  ST: "",
+/** Dots representing multiplier count, rotated to point toward center. */
+const Dots = ({
+  count,
+  light = false,
+  rotation,
+}: {
+  count: number
+  light?: boolean
+  rotation: string
+}) => {
+  return (
+    <div className={cn("flex gap-[0.9cqw]", rotation)}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          className={cn("size-[0.8cqw] rounded-full", light ? "bg-neutral-400" : "bg-white")}
+        />
+      ))}
+    </div>
+  )
+}
+
+/** Bulls-eye marker for the center/start square. */
+const BullsEye = () => (
+  <div className="relative flex items-center justify-center">
+    <div className="flex size-[2.5cqw] items-center justify-center rounded-full border-[0.15cqw] border-white">
+      <div className="size-[1cqw] rounded-full bg-white" />
+    </div>
+  </div>
+)
+
+/** Get the CSS rotation class for dots based on position relative to center. */
+const getRotation = (row: number, col: number): string => {
+  const center = Math.floor(BOARD_SIZE / 2)
+  if (row === center && col === center) return "rotate-0"
+  if (row === center) return "rotate-0"
+  if (col === center) return "rotate-90"
+  if (row < center && col < center) return "rotate-45"
+  if (row < center && col > center) return "rotate-[135deg]"
+  if (row > center && col < center) return "-rotate-45"
+  return "-rotate-[135deg]"
 }
 
 type Props = {

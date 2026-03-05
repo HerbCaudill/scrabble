@@ -1,10 +1,10 @@
 import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import { AnalysisView } from "../AnalysisView"
 import { createEmptyBoard } from "@/board/createEmptyBoard"
 import type { GameState } from "@/game/types"
-import type { GameAnalysis, TurnAnalysis, PlayerSummary } from "@/analysis/types"
+import type { GameAnalysis } from "@/analysis/types"
 
 /**
  * Mock analyzeGame so we don't need a real dictionary / move generator.

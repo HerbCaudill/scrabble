@@ -9,7 +9,7 @@ describe("exchangeTiles", () => {
     const bag = createTileBag()
     const { drawn: initialDraw, remaining } = drawTiles(bag, 7)
     const tilesToReturn = initialDraw.slice(0, 3)
-    const { drawn, remaining: newRemaining } = exchangeTiles(remaining, tilesToReturn, 3)
+    const { drawn } = exchangeTiles(remaining, tilesToReturn, 3)
     expect(drawn).toHaveLength(3)
   })
 

@@ -7,6 +7,13 @@ import { passTurn } from "@/game/passTurn"
 import { exchangePlayerTiles } from "@/game/exchangePlayerTiles"
 import { chooseMove } from "@/ai/chooseMove"
 import { usePersistedGameState } from "@/hooks/usePersistedGameState"
+import {
+  IconCheck,
+  IconArrowsExchange,
+  IconPlayerSkipForward,
+  IconArrowsShuffle,
+  IconX,
+} from "@tabler/icons-react"
 import type { Move, Position } from "@/board/types"
 import type { Tile } from "@/types"
 
@@ -182,9 +189,16 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
   })
 
   return (
-    <div className="flex h-screen items-start justify-center gap-6 bg-white p-6">
-      {/* Board + controls column */}
+    <div className="flex h-screen items-start justify-center bg-white p-6">
       <div className="flex flex-col items-center gap-4">
+        {/* Score display + tiles remaining */}
+        <ScoreDisplay
+          players={gameState.players}
+          currentPlayerIndex={isGameOver ? -1 : gameState.currentPlayerIndex}
+          tilesInBag={gameState.tileBag.length}
+          lastMove={gameState.moveHistory.at(-1)}
+        />
+
         {/* Turn indicator */}
         {!isGameOver && (
           <p className="text-center text-sm text-neutral-500">
@@ -232,56 +246,52 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
               <>
                 <button
                   onClick={handleConfirmExchange}
-                  className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
+                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
                 >
+                  <IconCheck size={20} />
                   Confirm exchange
                 </button>
                 <button
                   onClick={handleCancelExchange}
-                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
+                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
+                  <IconX size={20} />
                   Cancel
                 </button>
               </>
             : <>
                 <button
                   onClick={handlePlay}
-                  className="rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
+                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
                 >
+                  <IconCheck size={20} />
                   Play
                 </button>
                 <button
                   onClick={handleExchange}
-                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
+                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
+                  <IconArrowsExchange size={20} />
                   Exchange
                 </button>
                 <button
                   onClick={handlePass}
-                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
+                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
+                  <IconPlayerSkipForward size={20} />
                   Pass
                 </button>
                 <button
                   onClick={handleShuffle}
-                  className="rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
+                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
+                  <IconArrowsShuffle size={20} />
                   Shuffle
                 </button>
               </>
             }
           </div>
         )}
-      </div>
-
-      {/* Scoreboard */}
-      <div className="w-56 rounded-lg bg-neutral-50 p-4">
-        <ScoreDisplay
-          players={gameState.players}
-          currentPlayerIndex={isGameOver ? -1 : gameState.currentPlayerIndex}
-          tilesInBag={gameState.tileBag.length}
-          lastMove={gameState.moveHistory.at(-1)}
-        />
       </div>
     </div>
   )

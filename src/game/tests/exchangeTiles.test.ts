@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { createGame } from "../createGame"
 import { exchangePlayerTiles } from "../exchangePlayerTiles"
+import type { GameState } from "../types"
 describe("exchangePlayerTiles", () => {
   it("replaces selected tiles with new ones from the bag", () => {
     const state = createGame(["Alice", "Bob"])

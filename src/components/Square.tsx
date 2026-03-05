@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import { getSquareType } from "@/board/getSquareType"
 import { tileValues } from "@/board/tileValues"
-import type { SquareType, HighlightType } from "@/board/types"
+import type { HighlightType } from "@/board/types"
 
 /** A single square on the Scrabble board, showing either dots for multipliers or a placed tile. */
 export const Square = ({

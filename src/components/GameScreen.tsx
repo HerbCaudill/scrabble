@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from "react"
-import { cn } from "@/lib/utils"
 import { Board } from "./Board"
 import { Rack } from "./Rack"
 import { ScoreDisplay } from "./ScoreDisplay"

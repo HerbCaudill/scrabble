@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils"
 import { getSquareType } from "@/board/getSquareType"
 import { tileValues } from "@/board/tileValues"
-import { BOARD_SIZE } from "@/board/constants"
 import type { SquareType, HighlightType } from "@/board/types"
 
 /** A single square on the Scrabble board, showing either dots for multipliers or a placed tile. */
@@ -119,7 +118,7 @@ const BullsEye = () => (
 
 /** Get the CSS rotation class for dots based on position relative to center. */
 const getRotation = (row: number, col: number): string => {
-  const center = Math.floor(BOARD_SIZE / 2)
+  const center = 7
   if (row === center && col === center) return "rotate-0"
   if (row === center) return "rotate-0"
   if (col === center) return "rotate-90"

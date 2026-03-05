@@ -9,6 +9,9 @@ export const Rack = ({
   onTileSelect,
   onDragStart,
   onDragEnd,
+  onTouchDragStart,
+  onTouchDragMove,
+  onTouchDragEnd,
 }: Props) => {
   /** Wrap onDragStart to set the tile index in dataTransfer. */
   const handleDragStart = (index: number, e: React.DragEvent<HTMLDivElement>) => {
@@ -17,10 +20,40 @@ export const Rack = ({
     onDragStart?.(e)
   }
 
+  /** Handle touch start on a tile for mobile drag. */
+  const handleTouchStart = (index: number, e: React.TouchEvent<HTMLDivElement>) => {
+    if (swapMode) return
+    const touch = e.touches[0]
+    onTouchDragStart?.(index, touch.clientX, touch.clientY)
+  }
+
+  /** Handle touch move for mobile drag. Prevents scroll during drag. */
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (swapMode) return
+    if (onTouchDragMove) {
+      e.preventDefault()
+    }
+    const touch = e.touches[0]
+    onTouchDragMove?.(touch.clientX, touch.clientY)
+  }
+
+  /** Handle touch end for mobile drag drop. */
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (swapMode) return
+    const touch = e.changedTouches[0]
+    onTouchDragEnd?.(touch.clientX, touch.clientY)
+  }
+
   return (
     <div data-rack data-testid="rack" className="flex gap-1">
       {tiles.map((tile, index) => (
-        <div key={index} onClick={swapMode ? () => onTileSelect?.(index) : undefined}>
+        <div
+          key={index}
+          onClick={swapMode ? () => onTileSelect?.(index) : undefined}
+          onTouchStart={e => handleTouchStart(index, e)}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <Tile
             tile={tile}
             mode={swapMode ? "static" : "draggable"}
@@ -48,4 +81,10 @@ type Props = {
   onDragStart?: React.DragEventHandler<HTMLDivElement>
   /** Drag end handler forwarded to each tile. */
   onDragEnd?: React.DragEventHandler<HTMLDivElement>
+  /** Called when a touch drag starts on a tile (mobile). */
+  onTouchDragStart?: (index: number, x: number, y: number) => void
+  /** Called when touch moves during a drag (mobile). */
+  onTouchDragMove?: (x: number, y: number) => void
+  /** Called when touch ends during a drag (mobile). */
+  onTouchDragEnd?: (x: number, y: number) => void
 }

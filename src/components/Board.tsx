@@ -11,6 +11,7 @@ export const Board = ({
   squareHighlights,
   pendingTiles,
   dragOverSquare,
+  touchDragOverSquare,
   onDragOver,
   onDragLeave,
   onDrop,
@@ -30,7 +31,7 @@ export const Board = ({
         row.map((tile, colIndex) => {
           const key = `${rowIndex}-${colIndex}`
           const isPending = pendingTiles?.has(key) ?? false
-          const isDragOver = dragOverSquare === key
+          const isDragOver = dragOverSquare === key || touchDragOverSquare === key
           return (
             <Square
               key={key}
@@ -70,6 +71,8 @@ type Props = {
   pendingTiles?: Map<string, Tile>
   /** Key of the square currently being dragged over ("row-col" or null). */
   dragOverSquare?: string | null
+  /** Key of the square currently being touch-dragged over ("row-col" or null). */
+  touchDragOverSquare?: string | null
   /** Drag over handler for squares, receives the position. */
   onDragOver?: (e: React.DragEvent<HTMLDivElement>, position: Position) => void
   /** Drag leave handler for squares. */

@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      "@herbcaudill/scrabble-words":
+        specifier: ^1.0.2
+        version: 1.0.2
       "@tabler/icons-react":
         specifier: ^3.38.0
         version: 3.38.0(react@19.2.4)
@@ -1300,6 +1303,12 @@ packages:
     resolution:
       {
         integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==,
+      }
+
+  "@herbcaudill/scrabble-words@1.0.2":
+    resolution:
+      {
+        integrity: sha512-1xlpS7Z4rW6diEZRjstBCfmB4iHENTPKv6McTMJQVs2hzMnMFVX9htFuMSAoqvpmHkqHWhIpQ7/B53bqrlOfLg==,
       }
 
   "@hono/node-server@1.19.11":
@@ -7845,6 +7854,8 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
 
   "@floating-ui/utils@0.2.11": {}
+
+  "@herbcaudill/scrabble-words@1.0.2": {}
 
   "@hono/node-server@1.19.11(hono@4.12.5)":
     dependencies:

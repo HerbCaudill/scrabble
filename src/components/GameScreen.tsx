@@ -2,18 +2,17 @@ import { useState, useCallback, useEffect } from "react"
 import { Board } from "./Board"
 import { Rack } from "./Rack"
 import { ScoreDisplay } from "./ScoreDisplay"
-import { createGame } from "@/game/createGame"
 import { playMove } from "@/game/playMove"
 import { passTurn } from "@/game/passTurn"
 import { exchangePlayerTiles } from "@/game/exchangePlayerTiles"
 import { chooseMove } from "@/ai/chooseMove"
-import type { GameState } from "@/game/types"
+import { usePersistedGameState } from "@/hooks/usePersistedGameState"
 import type { Move, Position } from "@/board/types"
 import type { Tile } from "@/types"
 
 /** Main game view: board + rack + scoreboard + action buttons. Orchestrates turn flow. */
 export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
-  const [gameState, setGameState] = useState<GameState>(() => createGame(playerNames))
+  const [gameState, setGameState] = usePersistedGameState(playerNames)
   const [placedTiles, setPlacedTiles] = useState<PlacedTile[]>([])
   const [exchangeMode, setExchangeMode] = useState(false)
   const [exchangeSelection, setExchangeSelection] = useState<number[]>([])

@@ -58,6 +58,7 @@ vi.mock("@/game/playMove", () => ({
 describe("GameScreen", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
   })
 
   it("renders with default player names", () => {

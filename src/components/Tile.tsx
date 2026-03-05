@@ -33,7 +33,6 @@ export const Tile = ({
         "bg-neutral-50",
         "shadow-sm",
         "border border-neutral-300",
-        "font-[var(--font-ibm-plex-sans,_'IBM_Plex_Sans',_sans-serif)]",
 
         // Size variants
         size === "sm" && "h-7 w-7 pb-0.5 text-sm leading-none",

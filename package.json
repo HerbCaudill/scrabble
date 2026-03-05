@@ -17,6 +17,8 @@
     "ralph": "npx @herbcaudill/ralph"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@fontsource/ibm-plex-sans": "^5.2.8",
     "@herbcaudill/scrabble-words": "^1.0.2",
     "@tabler/icons-react": "^3.38.0",
     "class-variance-authority": "^0.7.1",

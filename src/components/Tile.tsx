@@ -8,6 +8,7 @@ export const Tile = ({
   mode = "static",
   selected = false,
   size = "md",
+  variant = "existing",
   onDragStart,
   onDragEnd,
 }: Props) => {
@@ -19,6 +20,7 @@ export const Tile = ({
       assignedBlank ? letter.toUpperCase()
       : ""
     : letter
+  const isExisting = variant === "existing"
 
   return (
     <div
@@ -28,16 +30,18 @@ export const Tile = ({
       onDragStart={mode === "draggable" ? onDragStart : undefined}
       onDragEnd={mode === "draggable" ? onDragEnd : undefined}
       className={cn(
-        // Base tile styles: classic yellow/amber Scrabble tile look
-        "relative inline-flex items-end justify-center rounded-sm font-bold select-none",
-        "bg-amber-100",
-        "shadow-sm",
-        "border border-amber-300",
+        "@container relative inline-flex items-center justify-center rounded-[2%] font-bold shadow-sm select-none",
 
-        // Size variants
-        size === "sm" && "h-7 w-7 pb-0.5 text-sm leading-none",
-        size === "md" && "h-10 w-10 pb-1 text-lg leading-none",
-        size === "lg" && "h-14 w-14 pb-1.5 text-2xl leading-none",
+        // Color: existing tiles are amber, new tiles are teal
+        isExisting ? "bg-amber-100" : "bg-teal-300",
+
+        // Size variants for non-board contexts (rack, preview)
+        size === "sm" && "h-7 w-7",
+        size === "md" && "h-10 w-10",
+        size === "lg" && "h-14 w-14",
+
+        // Board tiles fill their container
+        size === "board" && "h-full w-full",
 
         // Selected state
         selected && "ring-2 ring-amber-500 ring-offset-1",
@@ -47,7 +51,16 @@ export const Tile = ({
       )}
     >
       {/* Letter */}
-      <span data-letter className={cn("text-amber-900", assignedBlank && "opacity-40")}>
+      <span
+        data-letter
+        className={cn(
+          "text-[55cqw] leading-none font-bold",
+          blank ? "text-yellow-600"
+          : isExisting ? "text-khaki-800"
+          : "text-teal-800",
+          assignedBlank && "opacity-40",
+        )}
+      >
         {displayLetter}
       </span>
 
@@ -56,10 +69,8 @@ export const Tile = ({
         <span
           data-value
           className={cn(
-            "absolute font-semibold text-amber-700",
-            size === "sm" && "right-0.5 bottom-px text-[7px] leading-none",
-            size === "md" && "right-1 bottom-0.5 text-[9px] leading-none",
-            size === "lg" && "right-1.5 bottom-1 text-[11px] leading-none",
+            "absolute right-[6%] bottom-[3%] text-[25cqw] leading-none font-semibold",
+            isExisting ? "text-khaki-600" : "text-teal-600",
           )}
         >
           {value}
@@ -76,8 +87,10 @@ type Props = {
   mode?: "draggable" | "static"
   /** Whether the tile is selected (e.g. for swap mode). */
   selected?: boolean
-  /** Size variant: 'sm' for board, 'md' for rack, 'lg' for preview. */
-  size?: "sm" | "md" | "lg"
+  /** Size variant: 'sm' for compact, 'md' for rack, 'lg' for preview, 'board' for board squares. */
+  size?: "sm" | "md" | "lg" | "board"
+  /** Color variant: 'existing' for placed tiles (amber), 'new' for just-placed tiles (teal). */
+  variant?: "existing" | "new"
   /** Drag start handler (only used in draggable mode). */
   onDragStart?: React.DragEventHandler<HTMLDivElement>
   /** Drag end handler (only used in draggable mode). */

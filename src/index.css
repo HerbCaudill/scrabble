@@ -10,6 +10,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  /* https://www.tints.dev/khaki/b0a092 */
+  --color-khaki-50: oklch(97.04% 0.003 84.56);
+  --color-khaki-100: oklch(94.76% 0.005 67.76);
+  --color-khaki-200: oklch(88.64% 0.01 58.2);
+  --color-khaki-300: oklch(83.24% 0.016 61.3);
+  --color-khaki-400: oklch(77.11% 0.022 65.23);
+  --color-khaki-500: oklch(71.56% 0.027 63.58);
+  --color-khaki-600: oklch(60.83% 0.039 62.81);
+  --color-khaki-700: oklch(50.02% 0.031 65.19);
+  --color-khaki-800: oklch(37.63% 0.021 61.39);
+  --color-khaki-900: oklch(25.16% 0.012 67.24);
+  --color-khaki-950: oklch(17.13% 0.007 55.91);
+  --color-khaki: var(--color-khaki-500);
+}
+
 @theme inline {
   --font-sans: "IBM Plex Sans", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;

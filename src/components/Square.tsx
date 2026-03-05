@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils"
 import { getSquareType } from "@/board/getSquareType"
-import { tileValues } from "@/board/tileValues"
+import { Tile } from "./Tile"
 import type { HighlightType } from "@/board/types"
+import type { Tile as TileType } from "@/types"
+import { getTileValue } from "@/board/getTileValue"
 
 /** A single square on the Scrabble board, showing either dots for multipliers or a placed tile. */
 export const Square = ({
@@ -32,33 +34,37 @@ export const Square = ({
       onDrop={onDrop}
       className={cn(
         "relative flex items-center justify-center",
-        "aspect-square overflow-visible text-center",
+        "aspect-square overflow-visible",
         onClick && "cursor-pointer",
 
-        // Background: word multipliers are darker, letter/normal are lighter
-        !hasTile && isWordMultiplier && "bg-neutral-300",
-        !hasTile && !isWordMultiplier && "bg-neutral-200",
+        // Background: word multipliers are darker khaki, letter/normal are lighter
+        !hasTile && isWordMultiplier && "bg-khaki-500",
+        !hasTile && !isWordMultiplier && "bg-khaki-200",
 
-        // When tile is placed
-        hasTile && !pending && "bg-neutral-50",
+        // When tile is placed (non-pending) -- tile component handles its own background
+        hasTile && !pending && "",
 
         // Pending tile (placed but not yet committed)
-        pending && "border border-neutral-400 bg-neutral-100",
+        pending && "border-khaki-400 border",
 
         // Typed highlights (analysis view)
-        highlightType === "actual" && "ring-2 ring-neutral-500 ring-inset",
-        highlightType === "best" && "ring-2 ring-neutral-400 ring-inset",
-        highlightType === "both" && "ring-2 ring-neutral-500 ring-inset",
+        highlightType === "actual" && "ring-khaki-700 ring-2 ring-inset",
+        highlightType === "best" && "ring-khaki-500 ring-2 ring-inset",
+        highlightType === "both" && "ring-khaki-700 ring-2 ring-inset",
 
         // Legacy highlight
-        !highlightType && highlighted && "ring-2 ring-neutral-400 ring-inset",
+        !highlightType && highlighted && "ring-khaki-500 ring-2 ring-inset",
 
         // Drag-over visual feedback
-        dragOver && "bg-neutral-200 ring-2 ring-neutral-400 ring-inset",
+        dragOver && "bg-khaki-300 ring-khaki-500 ring-2 ring-inset",
       )}
     >
       {hasTile ?
-        <TileDisplay letter={tile} />
+        <Tile
+          tile={{ letter: tile, value: getTileValue(tile) }}
+          size="board"
+          variant={pending ? "new" : "existing"}
+        />
       : squareType === "ST" ?
         <BullsEye />
       : squareType !== null ?
@@ -69,19 +75,6 @@ export const Square = ({
         />
       : null}
     </div>
-  )
-}
-
-/** Displays a placed tile letter and its point value. */
-const TileDisplay = ({ letter }: { letter: string }) => {
-  const value = tileValues[letter.toUpperCase()] ?? 0
-  return (
-    <>
-      <span className="text-[1.2em] leading-none font-bold text-neutral-900">{letter}</span>
-      <span className="absolute right-[8%] bottom-[2%] text-[0.45em] font-semibold text-neutral-500">
-        {value}
-      </span>
-    </>
   )
 }
 
@@ -100,7 +93,7 @@ const Dots = ({
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className={cn("size-[0.8cqw] rounded-full", light ? "bg-neutral-400" : "bg-white")}
+          className={cn("size-[0.8cqw] rounded-full", light ? "bg-khaki-800" : "bg-white")}
         />
       ))}
     </div>
@@ -117,7 +110,12 @@ const BullsEye = () => (
 )
 
 /** Get the CSS rotation class for dots based on position relative to center. */
-const getRotation = (row: number, col: number): string => {
+const getRotation = (
+  /** Row index */
+  row: number,
+  /** Column index */
+  col: number,
+): string => {
   const center = 7
   if (row === center && col === center) return "rotate-0"
   if (row === center) return "rotate-0"

@@ -23,7 +23,7 @@ export const Board = ({
       className={cn(
         "@container grid aspect-square w-full max-w-[min(100vw,100vh)]",
         "grid-cols-[repeat(15,1fr)] grid-rows-[repeat(15,1fr)]",
-        "gap-[0.25cqw] overflow-hidden rounded-md bg-neutral-300 p-[0.25cqw]",
+        "bg-khaki-300 gap-[0.25cqw] overflow-hidden rounded-md p-[0.25cqw]",
       )}
     >
       {board.map((row, rowIndex) =>

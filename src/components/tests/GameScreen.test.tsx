@@ -55,6 +55,10 @@ vi.mock("@/game/playMove", () => ({
   })),
 }))
 
+vi.mock("@/scoring/calculateMoveScore", () => ({
+  calculateMoveScore: vi.fn(() => 12),
+}))
+
 describe("GameScreen", () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -170,6 +174,30 @@ describe("GameScreen", () => {
     // Shuffle should be gone, Recall should appear
     expect(screen.queryByRole("button", { name: "Shuffle" })).not.toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Recall" })).toBeInTheDocument()
+  })
+
+  it("shows score badge when tiles are placed on the board", () => {
+    render(<GameScreen />)
+    // No score badge initially
+    expect(screen.queryByTestId("score-badge")).not.toBeInTheDocument()
+    // Place a tile on the board
+    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
+    fireEvent.click(centerSquare)
+    // Score badge should appear with the mocked score
+    expect(screen.getByTestId("score-badge")).toBeInTheDocument()
+    expect(screen.getByTestId("score-badge")).toHaveTextContent("12")
+  })
+
+  it("hides score badge when tiles are recalled", () => {
+    render(<GameScreen />)
+    // Place a tile
+    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
+    fireEvent.click(centerSquare)
+    expect(screen.getByTestId("score-badge")).toBeInTheDocument()
+    // Recall tiles
+    fireEvent.click(screen.getByRole("button", { name: "Recall" }))
+    // Score badge should disappear
+    expect(screen.queryByTestId("score-badge")).not.toBeInTheDocument()
   })
 
   it("returns tiles to rack when Recall is clicked", () => {

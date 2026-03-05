@@ -1,11 +1,13 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useMemo } from "react"
 import { Board } from "./Board"
 import { Rack } from "./Rack"
+import { ScoreBadge } from "./ScoreBadge"
 import { ScoreDisplay } from "./ScoreDisplay"
 import { playMove } from "@/game/playMove"
 import { passTurn } from "@/game/passTurn"
 import { swapPlayerTiles } from "@/game/swapPlayerTiles"
 import { chooseMove } from "@/ai/chooseMove"
+import { calculateMoveScore } from "@/scoring/calculateMoveScore"
 import { usePersistedGameState } from "@/hooks/usePersistedGameState"
 import {
   IconCheck,
@@ -185,6 +187,13 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
     effectiveBoard[row][col] = tile
   }
 
+  /** Calculate the pending move score. */
+  const pendingScore = useMemo(() => {
+    if (placedTiles.length === 0) return 0
+    const move: Move = placedTiles.map(({ row, col, tile }) => ({ row, col, tile }))
+    return calculateMoveScore(gameState.board, move)
+  }, [placedTiles, gameState.board])
+
   /** Highlighted squares are the ones with tentatively placed tiles. */
   const highlightedSquares: Position[] = placedTiles.map(({ row, col }) => ({ row, col }))
 
@@ -274,6 +283,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                   <IconCheck size={20} />
                   Play
                 </button>
+                {placedTiles.length > 0 && <ScoreBadge score={pendingScore} />}
                 <button
                   onClick={handleSwap}
                   className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"

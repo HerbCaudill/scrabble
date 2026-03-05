@@ -183,28 +183,9 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
   })
 
   return (
-    <div className="flex h-screen gap-6 bg-white p-6">
-      {/* Board */}
-      <div className="flex flex-1 items-center justify-center">
-        <Board
-          board={effectiveBoard}
-          onSquareClick={handleSquareClick}
-          highlightedSquares={highlightedSquares}
-        />
-      </div>
-
-      {/* Sidebar */}
-      <div className="flex w-72 flex-col gap-6">
-        {/* Scoreboard */}
-        <div className="rounded-lg bg-neutral-50 p-4">
-          <ScoreDisplay
-            players={gameState.players}
-            currentPlayerIndex={isGameOver ? -1 : gameState.currentPlayerIndex}
-            tilesInBag={gameState.tileBag.length}
-            lastMove={gameState.moveHistory.at(-1)}
-          />
-        </div>
-
+    <div className="flex h-screen items-start justify-center gap-6 bg-white p-6">
+      {/* Board + controls column */}
+      <div className="flex flex-col items-center gap-4">
         {/* Turn indicator */}
         {!isGameOver && (
           <p className="text-center text-sm text-neutral-500">
@@ -215,6 +196,13 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
         )}
 
         {isGameOver && <p className="text-center text-lg font-bold text-neutral-900">Game over!</p>}
+
+        {/* Board */}
+        <Board
+          board={effectiveBoard}
+          onSquareClick={handleSquareClick}
+          highlightedSquares={highlightedSquares}
+        />
 
         {/* Rack */}
         {isHumanTurn && !isGameOver && (
@@ -240,7 +228,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
 
         {/* Action buttons */}
         {isHumanTurn && !isGameOver && (
-          <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
             {exchangeMode ?
               <>
                 <button
@@ -285,6 +273,16 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
             }
           </div>
         )}
+      </div>
+
+      {/* Scoreboard */}
+      <div className="w-56 rounded-lg bg-neutral-50 p-4">
+        <ScoreDisplay
+          players={gameState.players}
+          currentPlayerIndex={isGameOver ? -1 : gameState.currentPlayerIndex}
+          tilesInBag={gameState.tileBag.length}
+          lastMove={gameState.moveHistory.at(-1)}
+        />
       </div>
     </div>
   )

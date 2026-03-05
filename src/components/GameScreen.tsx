@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { Board } from "./Board"
 import { Rack } from "./Rack"
+import { ScoreDisplay } from "./ScoreDisplay"
 import { createGame } from "@/game/createGame"
 import { playMove } from "@/game/playMove"
 import { passTurn } from "@/game/passTurn"
@@ -197,27 +198,12 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
       <div className="flex w-72 flex-col gap-6">
         {/* Scoreboard */}
         <div className="rounded-lg bg-amber-900/50 p-4">
-          <h2 className="mb-3 text-sm font-semibold tracking-wide text-amber-200 uppercase">
-            Scores
-          </h2>
-          <div className="space-y-2">
-            {gameState.players.map((player, i) => (
-              <div
-                key={player.name}
-                className={cn(
-                  "flex items-center justify-between rounded-md px-3 py-2",
-                  i === gameState.currentPlayerIndex && !isGameOver ?
-                    "bg-amber-700/50 text-amber-100"
-                  : "text-amber-300",
-                )}
-              >
-                <span data-player={player.name} className="font-medium">
-                  {player.name}
-                </span>
-                <span className="font-bold">{player.score}</span>
-              </div>
-            ))}
-          </div>
+          <ScoreDisplay
+            players={gameState.players}
+            currentPlayerIndex={isGameOver ? -1 : gameState.currentPlayerIndex}
+            tilesInBag={gameState.tileBag.length}
+            lastMove={gameState.moveHistory.at(-1)}
+          />
         </div>
 
         {/* Turn indicator */}

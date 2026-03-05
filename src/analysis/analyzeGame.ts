@@ -181,7 +181,7 @@ const reconstructRacks = (
       rackSnapshots[i] = preMoveRack
       currentRacks.set(record.player, preMoveRack)
     } else {
-      // Pass or exchange: rack didn't change (for pass)
+      // Pass or swap: rack didn't change (for pass)
       rackSnapshots[i] = [...rack]
     }
   }

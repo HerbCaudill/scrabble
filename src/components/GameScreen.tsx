@@ -4,7 +4,7 @@ import { Rack } from "./Rack"
 import { ScoreDisplay } from "./ScoreDisplay"
 import { playMove } from "@/game/playMove"
 import { passTurn } from "@/game/passTurn"
-import { exchangePlayerTiles } from "@/game/exchangePlayerTiles"
+import { swapPlayerTiles } from "@/game/swapPlayerTiles"
 import { chooseMove } from "@/ai/chooseMove"
 import { usePersistedGameState } from "@/hooks/usePersistedGameState"
 import {
@@ -12,6 +12,7 @@ import {
   IconArrowsExchange,
   IconPlayerSkipForward,
   IconArrowsShuffle,
+  IconArrowBack,
   IconX,
 } from "@tabler/icons-react"
 import type { Move, Position } from "@/board/types"
@@ -21,8 +22,8 @@ import type { Tile } from "@/types"
 export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
   const [gameState, setGameState] = usePersistedGameState(playerNames)
   const [placedTiles, setPlacedTiles] = useState<PlacedTile[]>([])
-  const [exchangeMode, setExchangeMode] = useState(false)
-  const [exchangeSelection, setExchangeSelection] = useState<number[]>([])
+  const [swapMode, setSwapMode] = useState(false)
+  const [swapSelection, setSwapSelection] = useState<number[]>([])
   const [error, setError] = useState<string | null>(null)
   const [rackOrder, setRackOrder] = useState<number[]>(() => Array.from({ length: 7 }, (_, i) => i))
 
@@ -67,7 +68,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
   /** Place a tile from the rack onto a board square. */
   const handleSquareClick = useCallback(
     (position: Position) => {
-      if (!isHumanTurn || exchangeMode || isGameOver) return
+      if (!isHumanTurn || swapMode || isGameOver) return
       // Can't place on occupied squares
       if (gameState.board[position.row][position.col] !== null) return
       // Can't place if already placed a tile here
@@ -88,7 +89,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
     },
     [
       isHumanTurn,
-      exchangeMode,
+      swapMode,
       isGameOver,
       gameState.board,
       placedTiles,
@@ -119,45 +120,51 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
     setGameState(prev => passTurn(prev))
     setPlacedTiles([])
     setError(null)
-    setExchangeMode(false)
-    setExchangeSelection([])
+    setSwapMode(false)
+    setSwapSelection([])
   }, [])
 
-  /** Toggle exchange mode. */
-  const handleExchange = useCallback(() => {
-    setExchangeMode(true)
-    setExchangeSelection([])
+  /** Toggle swap mode. */
+  const handleSwap = useCallback(() => {
+    setSwapMode(true)
+    setSwapSelection([])
     setPlacedTiles([])
     setError(null)
   }, [])
 
-  /** Cancel exchange mode. */
-  const handleCancelExchange = useCallback(() => {
-    setExchangeMode(false)
-    setExchangeSelection([])
+  /** Cancel swap mode. */
+  const handleCancelSwap = useCallback(() => {
+    setSwapMode(false)
+    setSwapSelection([])
   }, [])
 
-  /** Confirm the exchange. */
-  const handleConfirmExchange = useCallback(() => {
-    if (exchangeSelection.length === 0) {
-      setError("Select tiles to exchange")
+  /** Confirm the swap. */
+  const handleConfirmSwap = useCallback(() => {
+    if (swapSelection.length === 0) {
+      setError("Select tiles to swap")
       return
     }
     try {
-      setGameState(prev => exchangePlayerTiles(prev, exchangeSelection))
-      setExchangeMode(false)
-      setExchangeSelection([])
+      setGameState(prev => swapPlayerTiles(prev, swapSelection))
+      setSwapMode(false)
+      setSwapSelection([])
       setError(null)
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Exchange failed")
+      setError(e instanceof Error ? e.message : "Swap failed")
     }
-  }, [exchangeSelection])
+  }, [swapSelection])
 
-  /** Toggle tile selection for exchange. */
+  /** Toggle tile selection for swap. */
   const handleTileSelect = useCallback((index: number) => {
-    setExchangeSelection(prev =>
+    setSwapSelection(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index],
     )
+  }, [])
+
+  /** Return all pending tiles from the board back to the rack. */
+  const handleRecall = useCallback(() => {
+    setPlacedTiles([])
+    setError(null)
   }, [])
 
   /** Shuffle the rack order (visual only). */
@@ -221,10 +228,10 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
         {isHumanTurn && !isGameOver && (
           <div className="flex justify-center">
             <Rack
-              tiles={exchangeMode ? displayedRack : rackTiles}
-              exchangeMode={exchangeMode}
-              selectedIndices={exchangeSelection}
-              onTileSelect={exchangeMode ? handleTileSelect : undefined}
+              tiles={swapMode ? displayedRack : rackTiles}
+              swapMode={swapMode}
+              selectedIndices={swapSelection}
+              onTileSelect={swapMode ? handleTileSelect : undefined}
             />
           </div>
         )}
@@ -242,17 +249,17 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
         {/* Action buttons */}
         {isHumanTurn && !isGameOver && (
           <div className="flex gap-2">
-            {exchangeMode ?
+            {swapMode ?
               <>
                 <button
-                  onClick={handleConfirmExchange}
+                  onClick={handleConfirmSwap}
                   className="flex flex-col items-center gap-1 rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
                 >
                   <IconCheck size={20} />
-                  Confirm exchange
+                  Confirm swap
                 </button>
                 <button
-                  onClick={handleCancelExchange}
+                  onClick={handleCancelSwap}
                   className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
                   <IconX size={20} />
@@ -268,11 +275,11 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                   Play
                 </button>
                 <button
-                  onClick={handleExchange}
+                  onClick={handleSwap}
                   className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                 >
                   <IconArrowsExchange size={20} />
-                  Exchange
+                  Swap
                 </button>
                 <button
                   onClick={handlePass}
@@ -281,13 +288,22 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                   <IconPlayerSkipForward size={20} />
                   Pass
                 </button>
-                <button
-                  onClick={handleShuffle}
-                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
-                >
-                  <IconArrowsShuffle size={20} />
-                  Shuffle
-                </button>
+                {placedTiles.length > 0 ?
+                  <button
+                    onClick={handleRecall}
+                    className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
+                  >
+                    <IconArrowBack size={20} />
+                    Recall
+                  </button>
+                : <button
+                    onClick={handleShuffle}
+                    className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
+                  >
+                    <IconArrowsShuffle size={20} />
+                    Shuffle
+                  </button>
+                }
               </>
             }
           </div>

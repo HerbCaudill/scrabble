@@ -28,11 +28,11 @@ export const Tile = ({
       onDragStart={mode === "draggable" ? onDragStart : undefined}
       onDragEnd={mode === "draggable" ? onDragEnd : undefined}
       className={cn(
-        // Base tile styles: warm tan background, raised 3D look
+        // Base tile styles: classic yellow/amber Scrabble tile look
         "relative inline-flex items-end justify-center rounded-sm font-bold select-none",
-        "bg-neutral-50",
+        "bg-amber-100",
         "shadow-sm",
-        "border border-neutral-300",
+        "border border-amber-300",
 
         // Size variants
         size === "sm" && "h-7 w-7 pb-0.5 text-sm leading-none",
@@ -40,14 +40,14 @@ export const Tile = ({
         size === "lg" && "h-14 w-14 pb-1.5 text-2xl leading-none",
 
         // Selected state
-        selected && "ring-2 ring-neutral-500 ring-offset-1",
+        selected && "ring-2 ring-amber-500 ring-offset-1",
 
         // Draggable cursor
         mode === "draggable" && "cursor-grab active:cursor-grabbing",
       )}
     >
       {/* Letter */}
-      <span data-letter className={cn("text-neutral-900", assignedBlank && "opacity-40")}>
+      <span data-letter className={cn("text-amber-900", assignedBlank && "opacity-40")}>
         {displayLetter}
       </span>
 
@@ -56,7 +56,7 @@ export const Tile = ({
         <span
           data-value
           className={cn(
-            "absolute font-semibold text-neutral-500",
+            "absolute font-semibold text-amber-700",
             size === "sm" && "right-0.5 bottom-px text-[7px] leading-none",
             size === "md" && "right-1 bottom-0.5 text-[9px] leading-none",
             size === "lg" && "right-1.5 bottom-1 text-[11px] leading-none",
@@ -74,7 +74,7 @@ type Props = {
   tile: TileType
   /** Display mode: 'draggable' for rack tiles, 'static' for board tiles. */
   mode?: "draggable" | "static"
-  /** Whether the tile is selected (e.g. for exchange mode). */
+  /** Whether the tile is selected (e.g. for swap mode). */
   selected?: boolean
   /** Size variant: 'sm' for board, 'md' for rack, 'lg' for preview. */
   size?: "sm" | "md" | "lg"

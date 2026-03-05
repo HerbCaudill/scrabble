@@ -43,8 +43,8 @@ const formatLastMove = (
       return `${move.player}: ${move.words.join(", ")} for ${move.score} pts`
     case "pass":
       return `${move.player} passed`
-    case "exchange":
-      return `${move.player} exchanged tiles`
+    case "swap":
+      return `${move.player} swapped tiles`
     default:
       return ""
   }

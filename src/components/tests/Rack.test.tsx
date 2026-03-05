@@ -42,25 +42,25 @@ describe("Rack", () => {
     })
   })
 
-  it("tiles are not draggable in exchange mode", () => {
+  it("tiles are not draggable in swap mode", () => {
     const tiles = makeTiles("AB")
-    render(<Rack tiles={tiles} exchangeMode />)
+    render(<Rack tiles={tiles} swapMode />)
     const tileEls = screen.getByTestId("rack").querySelectorAll("[data-tile]")
     tileEls.forEach(el => {
       expect(el).not.toHaveAttribute("draggable")
     })
   })
 
-  it("calls onTileSelect when a tile is clicked in exchange mode", () => {
+  it("calls onTileSelect when a tile is clicked in swap mode", () => {
     const tiles = makeTiles("AB")
     const onTileSelect = vi.fn()
-    render(<Rack tiles={tiles} exchangeMode onTileSelect={onTileSelect} />)
+    render(<Rack tiles={tiles} swapMode onTileSelect={onTileSelect} />)
     const tileEls = screen.getByTestId("rack").querySelectorAll("[data-tile]")
     fireEvent.click(tileEls[1])
     expect(onTileSelect).toHaveBeenCalledWith(1)
   })
 
-  it("does not call onTileSelect when not in exchange mode", () => {
+  it("does not call onTileSelect when not in swap mode", () => {
     const tiles = makeTiles("AB")
     const onTileSelect = vi.fn()
     render(<Rack tiles={tiles} onTileSelect={onTileSelect} />)
@@ -71,7 +71,7 @@ describe("Rack", () => {
 
   it("applies selected state to tiles at selectedIndices", () => {
     const tiles = makeTiles("ABC")
-    render(<Rack tiles={tiles} exchangeMode selectedIndices={[0, 2]} />)
+    render(<Rack tiles={tiles} swapMode selectedIndices={[0, 2]} />)
     const tileEls = screen.getByTestId("rack").querySelectorAll("[data-tile]")
     // Selected tiles should have ring class
     expect((tileEls[0] as HTMLElement).className).toMatch(/ring/)

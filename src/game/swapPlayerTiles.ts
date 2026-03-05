@@ -1,38 +1,34 @@
-import { exchangeTiles } from "../tiles/exchangeTiles"
+import { swapTiles } from "../tiles/swapTiles"
 import type { GameState, MoveRecord } from "./types"
 
-/** The minimum number of tiles that must be in the bag to allow an exchange. */
-const MIN_BAG_SIZE_FOR_EXCHANGE = 7
+/** The minimum number of tiles that must be in the bag to allow a swap. */
+const MIN_BAG_SIZE_FOR_SWAP = 7
 
 /**
- * Exchange selected tiles from the current player's rack for new tiles from the bag.
+ * Swap selected tiles from the current player's rack for new tiles from the bag.
  * Throws if fewer than 7 tiles remain in the bag.
  */
-export function exchangePlayerTiles(
+export function swapPlayerTiles(
   /** The current game state. */
   state: GameState,
-  /** Indices into the current player's rack identifying tiles to exchange. */
+  /** Indices into the current player's rack identifying tiles to swap. */
   tileIndices: number[],
 ): GameState {
-  if (state.tileBag.length < MIN_BAG_SIZE_FOR_EXCHANGE) {
-    throw new Error("Cannot exchange tiles: fewer than 7 tiles remain in the bag")
+  if (state.tileBag.length < MIN_BAG_SIZE_FOR_SWAP) {
+    throw new Error("Cannot swap tiles: fewer than 7 tiles remain in the bag")
   }
 
   const currentPlayer = state.players[state.currentPlayerIndex]
   const tilesToReturn = tileIndices.map(i => currentPlayer.rack[i])
   const keptTiles = currentPlayer.rack.filter((_, i) => !tileIndices.includes(i))
 
-  const { drawn, remaining: newBag } = exchangeTiles(
-    state.tileBag,
-    tilesToReturn,
-    tileIndices.length,
-  )
+  const { drawn, remaining: newBag } = swapTiles(state.tileBag, tilesToReturn, tileIndices.length)
 
   const newRack = [...keptTiles, ...drawn]
 
   const record: MoveRecord = {
     player: currentPlayer.name,
-    actionType: "exchange",
+    actionType: "swap",
     move: null,
     score: 0,
     words: [],

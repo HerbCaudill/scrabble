@@ -33,7 +33,7 @@ export type GameState = {
 }
 
 /** The type of action a player can take. */
-export type GameActionType = "place" | "pass" | "exchange" | "end"
+export type GameActionType = "place" | "pass" | "swap" | "end"
 
 /** A record of a move in the game history. */
 export type MoveRecord = {
@@ -55,5 +55,5 @@ export type MoveRecord = {
 export type GameAction =
   | { type: "place"; move: Move }
   | { type: "pass" }
-  | { type: "exchange"; tileIndices: number[] }
+  | { type: "swap"; tileIndices: number[] }
   | { type: "end" }

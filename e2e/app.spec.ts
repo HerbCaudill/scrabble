@@ -33,7 +33,7 @@ test.describe("Game screen", () => {
 
   test("shows action buttons", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Play" })).toBeVisible()
-    await expect(page.getByRole("button", { name: "Exchange" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Swap" })).toBeVisible()
     await expect(page.getByRole("button", { name: "Pass" })).toBeVisible()
     await expect(page.getByRole("button", { name: "Shuffle" })).toBeVisible()
   })
@@ -75,11 +75,11 @@ test.describe("Game screen", () => {
     expect(tilesAfter.sort()).toEqual(tilesBefore.sort())
   })
 
-  test("exchange mode toggles tile selection", async ({ page }) => {
-    await page.getByRole("button", { name: "Exchange" }).click()
+  test("swap mode toggles tile selection", async ({ page }) => {
+    await page.getByRole("button", { name: "Swap" }).click()
 
     // Should show confirm and cancel buttons
-    await expect(page.getByRole("button", { name: "Confirm exchange" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Confirm swap" })).toBeVisible()
     await expect(page.getByRole("button", { name: "Cancel" })).toBeVisible()
 
     // Cancel returns to normal mode

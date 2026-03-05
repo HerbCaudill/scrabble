@@ -103,14 +103,14 @@ describe("ScoreDisplay", () => {
     expect(screen.getByText(/passed/i)).toBeInTheDocument()
   })
 
-  it("shows last move info for an exchange", () => {
+  it("shows last move info for a swap", () => {
     const players = makePlayers([
       ["Alice", 0],
       ["Bob", 0],
     ])
     const lastMove: MoveRecord = {
       player: "Bob",
-      actionType: "exchange",
+      actionType: "swap",
       move: null,
       score: 0,
       words: [],
@@ -119,7 +119,7 @@ describe("ScoreDisplay", () => {
     render(
       <ScoreDisplay players={players} currentPlayerIndex={0} tilesInBag={80} lastMove={lastMove} />,
     )
-    expect(screen.getByText(/exchanged/i)).toBeInTheDocument()
+    expect(screen.getByText(/swapped/i)).toBeInTheDocument()
   })
 
   it("renders without a last move", () => {
@@ -131,6 +131,6 @@ describe("ScoreDisplay", () => {
     // Should not crash, and should not show any move info
     expect(screen.queryByText(/pts/)).not.toBeInTheDocument()
     expect(screen.queryByText(/passed/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/exchanged/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/swapped/i)).not.toBeInTheDocument()
   })
 })

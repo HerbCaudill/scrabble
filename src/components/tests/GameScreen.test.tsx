@@ -35,8 +35,8 @@ vi.mock("@/game/passTurn", () => ({
   })),
 }))
 
-vi.mock("@/game/exchangePlayerTiles", () => ({
-  exchangePlayerTiles: vi.fn((state: any) => ({
+vi.mock("@/game/swapPlayerTiles", () => ({
+  swapPlayerTiles: vi.fn((state: any) => ({
     ...state,
     currentPlayerIndex: (state.currentPlayerIndex + 1) % state.players.length,
     consecutivePasses: 0,
@@ -93,10 +93,10 @@ describe("GameScreen", () => {
     expect(rack.querySelectorAll("[data-tile]")).toHaveLength(7)
   })
 
-  it("renders Play, Exchange, Pass, and Shuffle buttons", () => {
+  it("renders Play, Swap, Pass, and Shuffle buttons", () => {
     render(<GameScreen />)
     expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Exchange" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Swap" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Pass" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Shuffle" })).toBeInTheDocument()
   })
@@ -114,22 +114,22 @@ describe("GameScreen", () => {
     expect(passTurn).toHaveBeenCalled()
   })
 
-  it("toggles exchange mode when Exchange is clicked", () => {
+  it("toggles swap mode when Swap is clicked", () => {
     render(<GameScreen />)
-    const exchangeBtn = screen.getByRole("button", { name: "Exchange" })
-    fireEvent.click(exchangeBtn)
-    // Should now show "Confirm exchange" button
-    expect(screen.getByRole("button", { name: "Confirm exchange" })).toBeInTheDocument()
+    const swapBtn = screen.getByRole("button", { name: "Swap" })
+    fireEvent.click(swapBtn)
+    // Should now show "Confirm swap" button
+    expect(screen.getByRole("button", { name: "Confirm swap" })).toBeInTheDocument()
   })
 
-  it("exits exchange mode when Exchange is clicked again (cancel)", () => {
+  it("exits swap mode when Swap is clicked again (cancel)", () => {
     render(<GameScreen />)
-    fireEvent.click(screen.getByRole("button", { name: "Exchange" }))
-    expect(screen.getByRole("button", { name: "Confirm exchange" })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "Swap" }))
+    expect(screen.getByRole("button", { name: "Confirm swap" })).toBeInTheDocument()
     // Click cancel
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }))
-    expect(screen.queryByRole("button", { name: "Confirm exchange" })).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Exchange" })).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Confirm swap" })).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Swap" })).toBeInTheDocument()
   })
 
   it("shuffles rack tiles when Shuffle is clicked", () => {
@@ -154,5 +154,41 @@ describe("GameScreen", () => {
     // Board has 225 squares (15x15)
     const squares = document.querySelectorAll("[data-cell]")
     expect(squares).toHaveLength(225)
+  })
+
+  it("shows Shuffle button when no tiles are placed on the board", () => {
+    render(<GameScreen />)
+    expect(screen.getByRole("button", { name: "Shuffle" })).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Recall" })).not.toBeInTheDocument()
+  })
+
+  it("shows Recall button instead of Shuffle after placing a tile on the board", () => {
+    render(<GameScreen />)
+    // Click a board square to place a tile
+    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
+    fireEvent.click(centerSquare)
+    // Shuffle should be gone, Recall should appear
+    expect(screen.queryByRole("button", { name: "Shuffle" })).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Recall" })).toBeInTheDocument()
+  })
+
+  it("returns tiles to rack when Recall is clicked", () => {
+    render(<GameScreen />)
+    const rack = screen.getByTestId("rack")
+    const initialTileCount = rack.querySelectorAll("[data-tile]").length
+
+    // Place a tile on the board
+    const centerSquare = document.querySelector('[data-cell="7-7"]') as HTMLElement
+    fireEvent.click(centerSquare)
+    // Rack should have one fewer tile
+    expect(rack.querySelectorAll("[data-tile]")).toHaveLength(initialTileCount - 1)
+
+    // Click Recall
+    fireEvent.click(screen.getByRole("button", { name: "Recall" }))
+    // Rack should be restored
+    expect(rack.querySelectorAll("[data-tile]")).toHaveLength(initialTileCount)
+    // Shuffle should be back
+    expect(screen.getByRole("button", { name: "Shuffle" })).toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Recall" })).not.toBeInTheDocument()
   })
 })

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { getSquareType } from "@/board/getSquareType"
 import { tileValues } from "@/board/tileValues"
 import { IconStar } from "@tabler/icons-react"
-import type { SquareType } from "@/board/types"
+import type { SquareType, HighlightType } from "@/board/types"
 
 /** A single square on the Scrabble board, showing either a premium label or a placed tile. */
 export const Square = ({
@@ -10,6 +10,7 @@ export const Square = ({
   col,
   tile,
   highlighted = false,
+  highlightType,
   pending = false,
   dragOver = false,
   onClick,
@@ -24,6 +25,7 @@ export const Square = ({
     <div
       data-cell={`${row}-${col}`}
       data-testid={`cell-${row}-${col}`}
+      {...(highlightType ? { "data-highlight": highlightType } : {})}
       onClick={onClick}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
@@ -49,8 +51,13 @@ export const Square = ({
         // Pending tile (placed but not yet committed)
         pending && "border-blue-400/60 bg-gradient-to-b from-blue-50 to-blue-100",
 
-        // Highlight
-        highlighted && "ring-2 ring-yellow-400 ring-inset",
+        // Typed highlights (analysis view)
+        highlightType === "actual" && "ring-2 ring-emerald-500 ring-inset",
+        highlightType === "best" && "ring-2 ring-indigo-500 ring-inset",
+        highlightType === "both" && "ring-2 ring-emerald-500 ring-inset",
+
+        // Legacy highlight (backwards compat)
+        !highlightType && highlighted && "ring-2 ring-yellow-400 ring-inset",
 
         // Drag-over visual feedback
         dragOver && "bg-green-100/50 ring-2 ring-green-400 ring-inset",
@@ -96,8 +103,10 @@ type Props = {
   col: number
   /** The tile letter placed at this position, or null if empty. */
   tile: string | null
-  /** Whether this square should be visually highlighted. */
+  /** Whether this square should be visually highlighted (legacy). */
   highlighted?: boolean
+  /** The type of analysis highlight to apply to this square. */
+  highlightType?: HighlightType
   /** Whether this tile is a pending placement (not yet committed). */
   pending?: boolean
   /** Whether a dragged tile is currently hovering over this square. */

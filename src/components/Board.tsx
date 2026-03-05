@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { Square } from "./Square"
-import type { BoardState, Position } from "@/board/types"
+import type { BoardState, HighlightType, Position } from "@/board/types"
 import type { Tile } from "@/types"
 
 /** 15x15 Scrabble board grid showing multiplier squares and placed tiles. */
@@ -8,6 +8,7 @@ export const Board = ({
   board,
   onSquareClick,
   highlightedSquares,
+  squareHighlights,
   pendingTiles,
   dragOverSquare,
   onDragOver,
@@ -37,6 +38,7 @@ export const Board = ({
               col={colIndex}
               tile={tile}
               highlighted={highlightSet.has(key)}
+              highlightType={squareHighlights?.get(key)}
               pending={isPending}
               dragOver={isDragOver}
               onClick={
@@ -62,6 +64,8 @@ type Props = {
   onSquareClick?: (position: Position) => void
   /** Squares to visually highlight (e.g. for showing the last move). */
   highlightedSquares?: Position[]
+  /** Map of "row-col" -> HighlightType for typed analysis highlights. */
+  squareHighlights?: Map<string, HighlightType>
   /** Map of "row-col" -> Tile for pending placements (shown with different styling). */
   pendingTiles?: Map<string, Tile>
   /** Key of the square currently being dragged over ("row-col" or null). */

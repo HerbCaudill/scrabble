@@ -3,6 +3,8 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import { analyzeGame } from "@/analysis/analyzeGame"
 import { reconstructBoardAtTurn } from "@/board/reconstructBoardAtTurn"
+import { getMovePositions } from "@/board/getMovePositions"
+import { buildSquareHighlights } from "@/board/buildSquareHighlights"
 import { Board } from "./Board"
 import type { GameState } from "@/game/types"
 import type { GameAnalysis } from "@/analysis/types"
@@ -28,13 +30,30 @@ export const AnalysisView = ({ gameState }: Props) => {
   )
 
   /** Positions of tiles placed in the current turn, for highlighting. */
-  const highlightedSquares = useMemo(() => {
+  const actualPositions = useMemo(() => {
     const record = gameState.moveHistory[currentTurnIndex]
     if (!record?.move) return []
-    return record.move.map(({ row, col }) => ({ row, col }))
+    return getMovePositions(record.move)
   }, [gameState.moveHistory, currentTurnIndex])
 
   const bestMove = turn.bestMoves[0] ?? null
+
+  /** Positions of the best available move's tiles. */
+  const bestPositions = useMemo(() => {
+    if (!bestMove) return []
+    return getMovePositions(bestMove)
+  }, [bestMove])
+
+  /** Whether the best move differs from what was actually played. */
+  const bestDiffersFromActual = bestMove !== null && turn.scoreDifferential > 0
+
+  /** Combined highlight map for actual and best move positions. */
+  const squareHighlights = useMemo(() => {
+    if (!bestDiffersFromActual) {
+      return buildSquareHighlights(actualPositions, [])
+    }
+    return buildSquareHighlights(actualPositions, bestPositions)
+  }, [actualPositions, bestPositions, bestDiffersFromActual])
   const movePlayedWord = turn.movePlayed?.words[0] ?? "Pass"
   const movePlayedScore = turn.movePlayed?.score ?? 0
   const bestMoveWord = bestMove?.words[0] ?? "N/A"
@@ -79,7 +98,7 @@ export const AnalysisView = ({ gameState }: Props) => {
       </div>
 
       {/* Board */}
-      <Board board={boardAfterMove} highlightedSquares={highlightedSquares} />
+      <Board board={boardAfterMove} squareHighlights={squareHighlights} />
 
       {/* Turn details */}
       <div data-testid="turn-display" data-turn={String(turn.turnNumber)}>

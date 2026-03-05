@@ -19,3 +19,6 @@ export type Move = Array<
 
 /** Board state - 15x15 grid where each cell is a letter or null. */
 export type BoardState = Array<Array<string | null>>
+
+/** The type of highlight applied to a board square in analysis view. */
+export type HighlightType = "actual" | "best" | "both"

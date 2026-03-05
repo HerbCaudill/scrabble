@@ -1,18 +1,18 @@
 import { cn } from "@/lib/utils"
 import type { Player, MoveRecord } from "@/game/types"
 
-/** Running score display with player scores, tiles remaining, and last move info. */
+/** Compact horizontal score display with player scores, tiles remaining, and last move info. */
 export const ScoreDisplay = ({ players, currentPlayerIndex, tilesInBag, lastMove }: Props) => {
   return (
-    <div className="space-y-3">
-      {/* Player scores */}
-      <div className="space-y-1">
+    <div className="flex flex-col items-center gap-1">
+      {/* Player scores + tiles remaining in a single row */}
+      <div className="flex items-center gap-4">
         {players.map((player, i) => (
           <div
             key={player.name}
             data-player-row={player.name}
             className={cn(
-              "flex items-center justify-between rounded-md px-3 py-2",
+              "flex items-center gap-2 rounded-md px-3 py-1",
               i === currentPlayerIndex ?
                 "bg-neutral-100 font-bold text-neutral-900"
               : "text-neutral-500",
@@ -22,10 +22,8 @@ export const ScoreDisplay = ({ players, currentPlayerIndex, tilesInBag, lastMove
             <span data-score={player.name}>{player.score}</span>
           </div>
         ))}
+        <span className="text-sm text-neutral-400">{tilesInBag} tiles remaining</span>
       </div>
-
-      {/* Tiles remaining */}
-      <p className="text-sm text-neutral-400">{tilesInBag} tiles remaining</p>
 
       {/* Last move info */}
       {lastMove && <p className="text-sm text-neutral-500">{formatLastMove(lastMove)}</p>}

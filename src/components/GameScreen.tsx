@@ -12,7 +12,6 @@ import { usePersistedGameState } from "@/hooks/usePersistedGameState"
 import {
   IconCheck,
   IconArrowsExchange,
-  IconPlayerSkipForward,
   IconArrowsShuffle,
   IconArrowBack,
   IconX,
@@ -117,15 +116,6 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
     }
   }, [placedTiles])
 
-  /** Pass the current turn. */
-  const handlePass = useCallback(() => {
-    setGameState(prev => passTurn(prev))
-    setPlacedTiles([])
-    setError(null)
-    setSwapMode(false)
-    setSwapSelection([])
-  }, [])
-
   /** Toggle swap mode. */
   const handleSwap = useCallback(() => {
     setSwapMode(true)
@@ -205,7 +195,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
   })
 
   return (
-    <div className="flex h-screen items-start justify-center bg-white p-6">
+    <div className="flex h-screen items-start justify-center bg-white p-1 sm:p-6">
       <div className="flex flex-col items-center gap-4">
         {/* Score display + tiles remaining */}
         <ScoreDisplay
@@ -290,13 +280,6 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                 >
                   <IconArrowsExchange size={20} />
                   Swap
-                </button>
-                <button
-                  onClick={handlePass}
-                  className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
-                >
-                  <IconPlayerSkipForward size={20} />
-                  Pass
                 </button>
                 {placedTiles.length > 0 ?
                   <button

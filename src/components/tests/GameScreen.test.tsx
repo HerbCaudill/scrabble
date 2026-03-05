@@ -97,11 +97,10 @@ describe("GameScreen", () => {
     expect(rack.querySelectorAll("[data-tile]")).toHaveLength(7)
   })
 
-  it("renders Play, Swap, Pass, and Shuffle buttons", () => {
+  it("renders Play, Swap, and Shuffle buttons", () => {
     render(<GameScreen />)
     expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Swap" })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Pass" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Shuffle" })).toBeInTheDocument()
   })
 
@@ -109,13 +108,6 @@ describe("GameScreen", () => {
     render(<GameScreen />)
     // The current player should be visually indicated
     expect(screen.getByText(/your turn/i)).toBeInTheDocument()
-  })
-
-  it("passes the turn when Pass is clicked", async () => {
-    const { passTurn } = await import("@/game/passTurn")
-    render(<GameScreen />)
-    fireEvent.click(screen.getByRole("button", { name: "Pass" }))
-    expect(passTurn).toHaveBeenCalled()
   })
 
   it("toggles swap mode when Swap is clicked", () => {

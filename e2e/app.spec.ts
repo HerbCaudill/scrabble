@@ -34,7 +34,6 @@ test.describe("Game screen", () => {
   test("shows action buttons", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Play" })).toBeVisible()
     await expect(page.getByRole("button", { name: "Swap" })).toBeVisible()
-    await expect(page.getByRole("button", { name: "Pass" })).toBeVisible()
     await expect(page.getByRole("button", { name: "Shuffle" })).toBeVisible()
   })
 
@@ -85,13 +84,5 @@ test.describe("Game screen", () => {
     // Cancel returns to normal mode
     await page.getByRole("button", { name: "Cancel" }).click()
     await expect(page.getByRole("button", { name: "Play" })).toBeVisible()
-  })
-
-  test("pass advances the turn to computer", async ({ page }) => {
-    await page.getByRole("button", { name: "Pass" }).click()
-
-    // Computer should take its turn — wait for human turn to come back
-    // The turn indicator or rack should reappear
-    await expect(page.locator("[data-rack]")).toBeVisible({ timeout: 5000 })
   })
 })

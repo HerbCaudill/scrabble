@@ -30,3 +30,8 @@ dist-ssr
 test-results
 playwright-report
 .vercel
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key

@@ -1,7 +1,7 @@
 {
   "database": "dolt",
-  "jsonl_export": "issues.jsonl",
   "backend": "dolt",
   "dolt_mode": "server",
-  "dolt_database": "beads_scrabble"
+  "dolt_database": "beads_scrabble",
+  "project_id": "55d8979b-bb37-4bb3-a805-ace2da205d7f"
 }

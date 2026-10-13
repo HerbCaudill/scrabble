@@ -175,9 +175,9 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
         {/* Turn indicator */}
         {!isGameOver && (
           <p className="text-center text-sm text-neutral-500">
-            {isHumanTurn ?
-              `${currentPlayer.name === "You" ? "Your" : `${currentPlayer.name}'s`} turn`
-            : `${currentPlayer.name}'s turn...`}
+            {isHumanTurn
+              ? `${currentPlayer.name === "You" ? "Your" : `${currentPlayer.name}'s`} turn`
+              : `${currentPlayer.name}'s turn...`}
           </p>
         )}
 
@@ -211,7 +211,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
         {/* Action buttons */}
         {isHumanTurn && !isGameOver && (
           <div className="flex gap-2">
-            {swapMode ?
+            {swapMode ? (
               <>
                 <button
                   onClick={handleConfirmSwap}
@@ -228,7 +228,8 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                   Cancel
                 </button>
               </>
-            : <>
+            ) : (
+              <>
                 <button
                   onClick={handlePlay}
                   className="flex flex-col items-center gap-1 rounded-md bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-700"
@@ -244,7 +245,7 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                   <IconArrowsExchange size={20} />
                   Swap
                 </button>
-                {placedTiles.length > 0 ?
+                {placedTiles.length > 0 ? (
                   <button
                     onClick={handleRecall}
                     className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
@@ -252,16 +253,17 @@ export const GameScreen = ({ playerNames = ["You", "Computer"] }: Props) => {
                     <IconArrowBack size={20} />
                     Recall
                   </button>
-                : <button
+                ) : (
+                  <button
                     onClick={handleShuffle}
                     className="flex flex-col items-center gap-1 rounded-md bg-neutral-100 px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-200"
                   >
                     <IconArrowsShuffle size={20} />
                     Shuffle
                   </button>
-                }
+                )}
               </>
-            }
+            )}
           </div>
         )}
       </div>

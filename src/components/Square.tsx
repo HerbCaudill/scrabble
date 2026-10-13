@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils"
 import { getSquareType } from "@/board/getSquareType"
 import { Tile } from "./Tile"
 import type { HighlightType } from "@/board/types"
-import type { Tile as TileType } from "@/types"
 import { getTileValue } from "@/board/getTileValue"
 
 /** A single square on the Scrabble board, showing either dots for multipliers or a placed tile. */
@@ -59,21 +58,21 @@ export const Square = ({
         dragOver && "bg-khaki-300 ring-khaki-500 ring-2 ring-inset",
       )}
     >
-      {hasTile ?
+      {hasTile ? (
         <Tile
           tile={{ letter: tile, value: getTileValue(tile) }}
           size="board"
           variant={pending ? "new" : "existing"}
         />
-      : squareType === "ST" ?
+      ) : squareType === "ST" ? (
         <BullsEye />
-      : squareType !== null ?
+      ) : squareType !== null ? (
         <Dots
           count={squareType === "DL" || squareType === "DW" ? 2 : 3}
           light={!isWordMultiplier}
           rotation={getRotation(row, col)}
         />
-      : null}
+      ) : null}
     </div>
   )
 }

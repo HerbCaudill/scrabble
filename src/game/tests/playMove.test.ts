@@ -8,9 +8,9 @@ import type { GameState } from "../types"
 const withRack = (state: GameState, tiles: string[]): GameState => ({
   ...state,
   players: state.players.map((p, i) =>
-    i === state.currentPlayerIndex ?
-      { ...p, rack: tiles.map(letter => ({ letter, value: 1 })) }
-    : p,
+    i === state.currentPlayerIndex
+      ? { ...p, rack: tiles.map(letter => ({ letter, value: 1 })) }
+      : p,
   ),
 })
 

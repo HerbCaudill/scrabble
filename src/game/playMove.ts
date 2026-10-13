@@ -55,9 +55,9 @@ export function playMove(
 
   // Build new players array
   const newPlayers = state.players.map((p, i) =>
-    i === state.currentPlayerIndex ?
-      { ...p, score: p.score + validation.score, rack: newRack }
-    : { ...p },
+    i === state.currentPlayerIndex
+      ? { ...p, score: p.score + validation.score, rack: newRack }
+      : { ...p },
   )
 
   // Check for game end: player used all tiles and bag is empty

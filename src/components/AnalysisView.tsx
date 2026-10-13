@@ -64,9 +64,9 @@ export const AnalysisView = ({ gameState }: Props) => {
           onClick={() => setCurrentTurnIndex(i => i - 1)}
           className={cn(
             "rounded p-1",
-            currentTurnIndex === 0 ?
-              "cursor-not-allowed text-gray-400"
-            : "text-gray-700 hover:bg-gray-200",
+            currentTurnIndex === 0
+              ? "cursor-not-allowed text-gray-400"
+              : "text-gray-700 hover:bg-gray-200",
           )}
         >
           <IconChevronLeft size={24} />
@@ -82,9 +82,9 @@ export const AnalysisView = ({ gameState }: Props) => {
           onClick={() => setCurrentTurnIndex(i => i + 1)}
           className={cn(
             "rounded p-1",
-            currentTurnIndex === totalTurns - 1 ?
-              "cursor-not-allowed text-gray-400"
-            : "text-gray-700 hover:bg-gray-200",
+            currentTurnIndex === totalTurns - 1
+              ? "cursor-not-allowed text-gray-400"
+              : "text-gray-700 hover:bg-gray-200",
           )}
         >
           <IconChevronRight size={24} />

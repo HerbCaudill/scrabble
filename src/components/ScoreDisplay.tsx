@@ -13,9 +13,9 @@ export const ScoreDisplay = ({ players, currentPlayerIndex, tilesInBag, lastMove
             data-player-row={player.name}
             className={cn(
               "flex items-center gap-2 rounded-md px-3 py-1",
-              i === currentPlayerIndex ?
-                "bg-neutral-100 font-bold text-neutral-900"
-              : "text-neutral-500",
+              i === currentPlayerIndex
+                ? "bg-neutral-100 font-bold text-neutral-900"
+                : "text-neutral-500",
             )}
           >
             <span data-player={player.name}>{player.name}</span>

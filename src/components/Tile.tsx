@@ -15,11 +15,7 @@ export const Tile = ({
   const { letter, value } = tile
   const blank = isBlankTile(letter)
   const assignedBlank = blank && letter !== " "
-  const displayLetter =
-    blank ?
-      assignedBlank ? letter.toUpperCase()
-      : ""
-    : letter
+  const displayLetter = blank ? (assignedBlank ? letter.toUpperCase() : "") : letter
   const isExisting = variant === "existing"
 
   return (
@@ -55,9 +51,7 @@ export const Tile = ({
         data-letter
         className={cn(
           "text-[55cqw] leading-none font-bold",
-          blank ? "text-yellow-600"
-          : isExisting ? "text-khaki-800"
-          : "text-teal-800",
+          blank ? "text-yellow-600" : isExisting ? "text-khaki-800" : "text-teal-800",
           assignedBlank && "opacity-40",
         )}
       >

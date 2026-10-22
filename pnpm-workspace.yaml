@@ -1,3 +1,7 @@
 allowBuilds:
   esbuild: true
   msw: false
+overrides:
+  ip-address@<=10.3.0: ^10.3.1
+  serialize-javascript@<=7.0.2: ^7.0.3
+  tinypool@<2.1.2: ^2.1.2
